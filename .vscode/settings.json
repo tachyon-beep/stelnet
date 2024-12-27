@@ -1,6 +1,18 @@
 {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
     "java.configuration.updateBuildConfiguration": "automatic",
-    "cSpell.words": ["Sebestyen"]
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.debug.settings.hotCodeReplace": "auto",
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-24",
+            "path": "C:\\Path\\To\\Your\\JDK",
+            "default": true
+        }
+    ],
+    "java.import.gradle.enabled": true,
+    "files.exclude": {
+        "**/.git": true,
+        "**/.gradle": true,
+        "**/build": true
+    }
 }
