@@ -25,9 +25,9 @@ configurations {
 }
 
 // install dependencies from zipped releases
-task installDependencies(type: Sync) {
+tasks.register('installDependencies', Sync) {
     def extractDir = "${buildDir}/libs"
-    
+
     ext.extractedJars = fileTree(extractDir) {
         include "**/*.jar"
         exclude "stelnet.jar"
@@ -35,7 +35,7 @@ task installDependencies(type: Sync) {
     }
 
     dependsOn configurations.zipped
-    from { 
+    from {
         configurations.zipped.collect { zipTree(it) }
     }
     into extractDir
@@ -43,12 +43,13 @@ task installDependencies(type: Sync) {
 
 // project level config
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_7
-    targetCompatibility = JavaVersion.VERSION_1_7
+    sourceCompatibility = JavaVersion.VERSION_24
+    targetCompatibility = JavaVersion.VERSION_24
 }
 
 // where to find sources
 sourceSets.main.java.srcDirs = ['src/']
+sourceSets.test.java.srcDirs = ['tests/']
 
 // build everything and make a jar
 build {
@@ -63,26 +64,31 @@ build {
 
 // compile time dependencies
 dependencies {
+    // Update the starsector-api version to match your game version
     implementation "jaghaimo:starsector-api:0.96a-RC10@starfarer.api.jar"
-    zipped "Lukas22041:LunaLib:1.7.6@LunaLib.zip"
+    zipped "Lukas22041:LunaLib:1.7.7@LunaLib.zip"
     implementation files({ tasks.installDependencies.extractedJars })
 
-    // game dependencies
-    implementation group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.10'
+    // Updated game dependencies
+    implementation group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.20'
     implementation group: 'org.lwjgl.lwjgl', name: 'lwjgl', version: '2.9.3'
     implementation group: 'org.lwjgl.lwjgl', name: 'lwjgl_util', version: '2.9.3'
-    implementation group: 'log4j', name: 'log4j', version: '1.2.9'
-    implementation group: 'org.json', name: 'json', version: '20090211'
+    implementation group: 'log4j', name: 'log4j', version: '1.2.17'
+    implementation group: 'org.json', name: 'json', version: '20231013'
     implementation group: 'net.java.jinput', name: 'jinput', version: '2.0.7'
-    implementation group: 'org.codehaus.janino', name: 'janino', version: '3.0.7'
+    implementation group: 'org.codehaus.janino', name: 'janino', version: '3.1.10'
 
-    // lombok
-    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.28'
-    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.28'
+    // Updated lombok
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.30'
+
+    // Updated test dependencies
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.mockito:mockito-core:5.8.0'
 }
 
 // custom tasks
-task release(type: Zip) {
+tasks.register('release', Zip) {
     dependsOn build
     archiveFileName = "${project.name}-${readModInfoJson().version}.zip"
     destinationDirectory = file(rootDir)
